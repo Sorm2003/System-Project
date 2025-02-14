@@ -1,0 +1,344 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Inventory System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <!-- Include jsPDF library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- Include jsPDF autoTable plugin -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.27/jspdf.plugin.autotable.min.js"></script>
+    <!-- Include xlsx library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+  </head>
+  <body class="bg-gray-100">
+    <div class="flex">
+      <!-- Sidebar -->
+      <div class="w-64 bg-gray-800 text-white h-screen">
+        <div class="flex items-center justify-center h-16 bg-green-700">
+          <h1 class="text-xl font-bold">Inventory System</h1>
+        </div>
+        <nav class="mt-5">
+          <a class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700" href="dashboard.html">
+            <i class="fas fa-tachometer-alt mr-2"></i>
+            Dashboard
+          </a>
+          <a class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700" href="category.html">
+            <i class="fas fa-list mr-2"></i>
+            Category
+          </a>
+          <a class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700" href="product.html">
+            <i class="fas fa-box mr-2"></i>
+            Product
+          </a>
+          <a class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700" href="customer.html">
+            <i class="fas fa-users mr-2"></i>
+            Customer
+          </a>
+          <a class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700" href="supplier.html">
+            <i class="fas fa-truck mr-2"></i>
+            Supplier
+          </a>
+          <a class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700" href="purchase.html">
+            <i class="fas fa-shopping-cart mr-2"></i>
+            Purchase Products
+          </a>
+          <a class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700" href="user.html">
+            <i class="fas fa-users-cog mr-2"></i>
+            System Users
+          </a>
+        </nav>
+      </div>
+
+      <!-- Main Content -->
+      <div class="flex-1 p-6">
+        <div class="bg-white p-4 rounded shadow">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-bold">List of Suppliers</h2>
+            <div class="flex space-x-2">
+              <button class="bg-green-500 text-white px-4 py-2 rounded" id="open-modal-button">
+                <i class="fas fa-plus"></i> Add Supplier
+              </button>
+              <button class="bg-red-500 text-white px-4 py-2 rounded" onclick="generatePDF()">
+                <i class="fas fa-file-pdf"></i> Export PDF
+              </button>
+              <button class="bg-blue-500 text-white px-4 py-2 rounded" onclick="exportToExcel()">
+                <i class="fas fa-file-excel"></i> Export Excel
+              </button>
+            </div>
+          </div>
+
+          <!-- Table (List of Suppliers) -->
+          <table id="supplierTable" class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" scope="col">
+                  ID
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" scope="col">
+                  Name
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" scope="col">
+                  Address
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" scope="col">
+                  Email
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" scope="col">
+                  Contact
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" scope="col">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap">1</td>
+                <td class="px-6 py-4 whitespace-nowrap">XYZ Suppliers</td>
+                <td class="px-6 py-4 whitespace-nowrap">114 Test Address</td>
+                <td class="px-6 py-4 whitespace-nowrap">xyz@suppliers.com</td>
+                <td class="px-6 py-4 whitespace-nowrap">8545778888</td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <button class="bg-blue-500 text-white px-2 py-1 rounded" onclick="editSupplier(1)">
+                    <i class="fas fa-edit"></i> Edit
+                  </button>
+                  <button class="bg-red-500 text-white px-2 py-1 rounded" onclick="deleteSupplier(1)">
+                    <i class="fas fa-trash"></i> Delete
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap">2</td>
+                <td class="px-6 py-4 whitespace-nowrap">CAC Suppliers</td>
+                <td class="px-6 py-4 whitespace-nowrap">169 Allace Avenue</td>
+                <td class="px-6 py-4 whitespace-nowrap">business@cacsupp.com</td>
+                <td class="px-6 py-4 whitespace-nowrap">7455451145</td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <button class="bg-blue-500 text-white px-2 py-1 rounded" onclick="editSupplier(2)">
+                    <i class="fas fa-edit"></i> Edit
+                  </button>
+                  <button class="bg-red-500 text-white px-2 py-1 rounded" onclick="deleteSupplier(2)">
+                    <i class="fas fa-trash"></i> Delete
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- Pagination -->
+          <div class="flex justify-between items-center mt-4">
+            <p class="text-sm text-gray-600">Showing 1 to 2 of 2 entries</p>
+            <div class="flex space-x-2">
+              <button class="px-4 py-2 text-sm text-gray-600 bg-gray-200 rounded">Previous</button>
+              <button class="px-4 py-2 text-sm text-gray-600 bg-gray-200 rounded">1</button>
+              <button class="px-4 py-2 text-sm text-gray-600 bg-gray-200 rounded">Next</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal for Adding Supplier -->
+        <div id="add-supplier-modal" class="fixed inset-0 z-50 hidden bg-gray-500 bg-opacity-50 flex items-center justify-center">
+          <div class="bg-white p-6 rounded shadow-lg w-1/3">
+            <h2 class="text-2xl font-bold mb-4">Add Supplier</h2>
+            <form>
+              <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="name">Name</label>
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="name" type="text" value="CSTRO Suppliers">
+              </div>
+              <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="address">Address</label>
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="address" type="text" value="114 Test Address">
+              </div>
+              <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="email">Email</label>
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="email" type="email" value="supplier@cstro.com">
+              </div>
+              <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="phone">Phone</label>
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="phone" type="text" value="7140101010">
+              </div>
+              <div class="flex justify-end">
+                <button type="button" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mr-2" id="close-modal-button">Cancel</button>
+                <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Submit</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Import Suppliers Section -->
+        <div class="bg-white p-4 rounded shadow mt-6">
+          <h2 class="text-xl font-bold mb-4">Import Suppliers Data</h2>
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700" for="file">Input File</label>
+            <input class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100" id="file" name="file" type="file"/>
+          </div>
+          <button class="bg-green-500 text-white px-4 py-2 rounded">Submit</button>
+        </div>
+
+        <!-- File Data Notice -->
+        <div class="bg-orange-100 p-4 rounded shadow mt-6">
+          <p class="text-orange-700 font-bold">
+            Attention! File Data Customer Only Type (.xls, .xlsx)
+          </p>
+        </div>
+        <!-- Modal for Editing Supplier -->
+<div id="edit-supplier-modal" class="fixed inset-0 z-50 hidden bg-gray-500 bg-opacity-50 flex items-center justify-center">
+  <div class="bg-white p-6 rounded shadow-lg w-1/3">
+    <h2 class="text-2xl font-bold mb-4">Edit Supplier</h2>
+    <form id="edit-supplier-form">
+      <input type="hidden" id="edit-supplier-id" />
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="edit-name">Name</label>
+        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="edit-name" type="text">
+      </div>
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="edit-address">Address</label>
+        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="edit-address" type="text">
+      </div>
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="edit-email">Email</label>
+        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="edit-email" type="email">
+      </div>
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="edit-phone">Phone</label>
+        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="edit-phone" type="text">
+      </div>
+      <div class="flex justify-end">
+        <button type="button" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mr-2" id="close-edit-modal-button">Cancel</button>
+        <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Save</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      // Open the modal when the button is clicked
+      document.getElementById('open-modal-button').addEventListener('click', function() {
+        document.getElementById('add-supplier-modal').classList.remove('hidden');
+      });
+
+      // Close the modal when the cancel button is clicked
+      document.getElementById('close-modal-button').addEventListener('click', function() {
+        document.getElementById('add-supplier-modal').classList.add('hidden');
+      });
+
+      // Function to generate PDF
+      function generatePDF() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+
+        doc.text("Supplier List", 14, 10);
+
+        // Get table data
+        const table = document.getElementById("supplierTable");
+        const data = [];
+        const headers = [];
+
+        // Extract headers
+        table.querySelectorAll("thead th").forEach(header => {
+          headers.push(header.innerText);
+        });
+
+        // Extract rows
+        table.querySelectorAll("tbody tr").forEach(row => {
+          const rowData = [];
+          row.querySelectorAll("td").forEach(cell => {
+            rowData.push(cell.innerText);
+          });
+          data.push(rowData);
+        });
+
+        // Add table to PDF
+        doc.autoTable({
+          head: [headers],
+          body: data,
+          startY: 20
+        });
+
+        doc.save("Supplier_List.pdf");
+      }
+
+      // Function to export table data to Excel
+      function exportToExcel() {
+        const table = document.getElementById("supplierTable");
+        const wb = XLSX.utils.table_to_book(table, { sheet: "Suppliers" });
+        XLSX.writeFile(wb, "Supplier_List.xlsx");
+      }
+
+      // Edit supplier function
+      function editSupplier(id) {
+        alert(`Edit supplier with ID: ${id}`);
+        // You can implement your edit logic here
+      }
+
+      // Delete supplier function
+      function deleteSupplier(id) {
+        if (confirm(`Are you sure you want to delete supplier with ID: ${id}?`)) {
+          alert(`Deleted supplier with ID: ${id}`);
+          // Implement your delete logic here
+        }
+      }
+      // Edit supplier function
+function editSupplier(id) {
+  // Fetch supplier data based on ID (for simplicity, using static data here)
+  const supplierData = {
+    1: {
+      name: 'XYZ Suppliers',
+      address: '114 Test Address',
+      email: 'xyz@suppliers.com',
+      phone: '8545778888'
+    },
+    2: {
+      name: 'CAC Suppliers',
+      address: '169 Allace Avenue',
+      email: 'business@cacsupp.com',
+      phone: '7455451145'
+    }
+  };
+
+  // Get the supplier's data
+  const supplier = supplierData[id];
+  
+  // Populate the modal with the supplier's current data
+  document.getElementById('edit-supplier-id').value = id;
+  document.getElementById('edit-name').value = supplier.name;
+  document.getElementById('edit-address').value = supplier.address;
+  document.getElementById('edit-email').value = supplier.email;
+  document.getElementById('edit-phone').value = supplier.phone;
+
+  // Show the modal
+  document.getElementById('edit-supplier-modal').classList.remove('hidden');
+}
+
+// Close the modal when the cancel button is clicked
+document.getElementById('close-edit-modal-button').addEventListener('click', function() {
+  document.getElementById('edit-supplier-modal').classList.add('hidden');
+});
+
+// Handle the form submission to update the supplier data
+document.getElementById('edit-supplier-form').addEventListener('submit', function(event) {
+  event.preventDefault();
+
+  const id = document.getElementById('edit-supplier-id').value;
+  const updatedSupplier = {
+    name: document.getElementById('edit-name').value,
+    address: document.getElementById('edit-address').value,
+    email: document.getElementById('edit-email').value,
+    phone: document.getElementById('edit-phone').value
+  };
+
+  // Update the supplier data (you can send this to a server here)
+  alert(`Updated supplier ${id}:\n` + JSON.stringify(updatedSupplier));
+
+  // Close the modal
+  document.getElementById('edit-supplier-modal').classList.add('hidden');
+});
+
+    </script>
+  </body>
+</html>

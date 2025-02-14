@@ -1,0 +1,227 @@
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Inventory System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.14/jspdf.plugin.autotable.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script> <!-- SheetJS Library -->
+  
+ 
+</head>
+<body class="bg-gray-100">
+  <div class="flex">
+    <!-- Sidebar -->
+    <div class="w-64 bg-gray-800 text-white h-screen">
+      <div class="flex items-center justify-center h-16 bg-green-600">
+        <h1 class="text-xl font-bold">Inventory System</h1>
+      </div>
+      <nav class="mt-5">
+        <a class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700" href="dashboard.html">
+          <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
+        </a>
+        <a class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700" href="category.html">
+          <i class="fas fa-list mr-2"></i> Category
+        </a>
+        <a class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700" href="product.html">
+          <i class="fas fa-box mr-2"></i> Product
+        </a>
+        <a class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700" href="customer.html">
+          <i class="fas fa-users mr-2"></i> Customer
+        </a>
+        <a class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700" href="supplier.html">
+          <i class="fas fa-truck mr-2"></i> Supplier
+        </a>
+        <a class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700" href="purchase.html">
+          <i class="fas fa-shopping-cart mr-2"></i> Purchase Products
+        </a>
+        <a class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700" href="user.html">
+          <i class="fas fa-users-cog mr-2"></i> System Users
+        </a>
+      </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 p-6">
+      <div class="bg-white p-4 rounded shadow">
+        <h2 class="text-xl font-bold mb-4">List of Customers</h2>
+        <div class="flex justify-between items-center mb-4">
+          <div>
+            <button class="bg-green-500 text-white px-4 py-2 rounded mr-2" onclick="openModal()"><i class="fas fa-plus"></i> Add Customers</button>
+            <button class="bg-red-500 text-white px-4 py-2 rounded mr-2" onclick="generatePDF()"><i class="fas fa-file-pdf"></i> Export PDF</button>
+            <button class="bg-blue-500 text-white px-4 py-2 rounded" onclick="exportToExcel()"><i class="fas fa-file-excel"></i> Export Excel</button>
+          </div>
+          <div>
+            <label class="mr-2" for="entries">Show</label>
+            <select class="border rounded p-1" id="entries">
+              <option value="10">10</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+            <span class="ml-2">entries</span>
+          </div>
+          <div>
+            <label class="mr-2" for="search">Search:</label>
+            <input class="border rounded p-1" id="search" type="text"/>
+          </div>
+        </div>
+
+        <!-- Table -->
+        <table id="customerTable" class="min-w-full bg-white">
+          <thead>
+            <tr>
+              <th class="py-2 px-4 border-b">ID</th>
+              <th class="py-2 px-4 border-b">Name</th>
+              <th class="py-2 px-4 border-b">Address</th>
+              <th class="py-2 px-4 border-b">Email</th>
+              <th class="py-2 px-4 border-b">Contact</th>
+              <th class="py-2 px-4 border-b">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr id="customer1">
+              <td class="py-2 px-4 border-b">1</td>
+              <td class="py-2 px-4 border-b">Christine Moore</td>
+              <td class="py-2 px-4 border-b">114 Test Address</td>
+              <td class="py-2 px-4 border-b">christine@mail.com</td>
+              <td class="py-2 px-4 border-b">7410001450</td>
+              <td class="py-2 px-4 border-b">
+                <button class="bg-blue-500 text-white px-2 py-1 rounded mr-2" onclick="editCustomer('customer1')"><i class="fas fa-edit"></i> Edit</button>
+                <button class="bg-red-500 text-white px-2 py-1 rounded-lg shadow-md hover:bg-red-500" onclick="deleteCustomer('customer1')"><i class="fas fa-trash"></i> Delete</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Delete Customer Confirmation Modal -->
+      <div id="deleteCustomerModal" class="hidden fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
+        <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-semibold">Confirm Deletion</h2>
+            <button id="closeDeleteModal" class="text-gray-500 hover:text-gray-700" onclick="cancelDelete"><i class="fas fa-times"></i></button>
+          </div>
+          <p class="mb-4">Are you sure you want to delete this customer?</p>
+          <div class="flex justify-end space-x-4">
+            <button type="button" id="cancelDeleteModal" class="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600" onclick="cancelDelete()">Cancel</button>
+            <button type="button" id="confirmDelete" class="bg-green-500 text-white px-4 py-2 rounded" onclick="confirmDelete()">Delete</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add Customer Modal -->
+      <div id="addCustomerModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="bg-white p-8 rounded shadow-lg w-96">
+          <h2 class="text-xl font-bold mb-4">Add New Customer</h2>
+          <form>
+              <div class="mb-4">
+                  <label class="block text-gray-700 text-sm font-bold mb-2" for="name">Name</label>
+                  <input class="shadow border rounded w-full py-2 px-3 text-gray-700" id="name" type="text" placeholder="Enter customer name">
+              </div>
+              <div class="mb-4">
+                  <label class="block text-gray-700 text-sm font-bold mb-2" for="address">Address</label>
+                  <input class="shadow border rounded w-full py-2 px-3 text-gray-700" id="address" type="text" placeholder="Enter customer address">
+              </div>
+              <div class="mb-4">
+                  <label class="block text-gray-700 text-sm font-bold mb-2" for="email">Email</label>
+                  <input class="shadow border rounded w-full py-2 px-3 text-gray-700" id="email" type="email" placeholder="Enter customer email">
+              </div>
+              <div class="mb-6">
+                  <label class="block text-gray-700 text-sm font-bold mb-2" for="phone">Phone</label>
+                  <input class="shadow border rounded w-full py-2 px-3 text-gray-700" id="phone" type="text" placeholder="Enter customer phone number">
+              </div>
+              <div class="flex justify-between">
+                  <button class="bg-red-500 text-white px-4 py-2 rounded" type="button" onclick="closeModal()">Cancel</button>
+                  <button class="bg-green-500 text-white px-4 py-2 rounded" type="submit">Submit</button>
+              </div>
+          </form>
+        </div>
+      </div>
+
+     </div>
+    </div>
+  </div>
+  <script>
+    // Function to open the modal
+    function openModal() {
+      document.getElementById("addCustomerModal").classList.remove("hidden");
+    }
+
+    // Function to close the modal
+    function closeModal() {
+      document.getElementById("addCustomerModal").classList.add("hidden");
+    }
+
+    // Function to generate PDF
+    function generatePDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      doc.text("Customer List", 14, 10);
+      
+      // Convert table to PDF
+      doc.autoTable({
+        startY: 20,
+        html: "#customerTable"
+      });
+
+      doc.save("Customer_List.pdf");
+    }
+    function editCustomer(rowId) {
+      // Get customer data from the row
+      let row = document.getElementById(rowId);
+      let name = row.cells[1].innerText;
+      let address = row.cells[2].innerText;
+      let email = row.cells[3].innerText;
+      let phone = row.cells[4].innerText;
+
+      // Fill the modal with the customer data
+      document.getElementById("name").value = name;
+      document.getElementById("address").value = address;
+      document.getElementById("email").value = email;
+      document.getElementById("phone").value = phone;
+
+      // Open the modal for editing
+      openModal();
+    }
+
+    // Function to export to Excel
+    function exportToExcel() {
+      let table = document.getElementById("customerTable");
+      let wb = XLSX.utils.table_to_book(table, {sheet: "Customers"});
+      XLSX.writeFile(wb, "Customer_List.xlsx");
+    }
+
+    // Function to handle delete with confirmation
+    let currentRowId = null;  // Global variable to store the row ID for deletion
+
+    function deleteCustomer(rowId) {
+      currentRowId = rowId;  // Set the row ID to be deleted
+      document.getElementById("deleteCustomerModal").classList.remove("hidden");  // Show the confirmation modal
+    }
+
+    // Confirm deletion
+    function confirmDelete() {
+      if (currentRowId) {
+        document.getElementById(currentRowId).remove();  // Remove the row from the table
+        document.getElementById("deleteCustomerModal").classList.add("hidden");  // Hide the modal
+      }
+    }
+
+    // Cancel deletion
+    function cancelDelete() {
+      document.getElementById("deleteCustomerModal").classList.add("hidden");  // Hide the modal without deleting
+    }
+    
+    document.getElementById("confirmDelete").addEventListener("click", function() {
+            // Add your delete functionality here, e.g., removing the row from the table
+            alert("Customer Deleted");
+            document.getElementById("deleteCustomerModal").classList.add("hidden");
+    });
+  </script>
+
+</body>
+</html>

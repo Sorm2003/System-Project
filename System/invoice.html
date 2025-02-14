@@ -1,0 +1,119 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchase Invoice Entry</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-6">
+    <div class="max-w-4xl mx-auto bg-white p-6 rounded shadow">
+        <h1 class="text-2xl font-bold mb-4">Purchase Invoice Entry</h1>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div>
+                <label class="block text-gray-700">Purchase Date:</label>
+                <input type="date" class="w-full border border-gray-300 p-2 rounded" value="2017-01-16">
+            </div>
+            <div>
+                <label class="block text-gray-700">Purchase No.:</label>
+                <input type="text" class="w-full border border-gray-300 p-2 rounded" value="P00022S" readonly>
+            </div>
+            <div>
+                <label class="block text-gray-700">Bill Date:</label>
+                <input type="date" class="w-full border border-gray-300 p-2 rounded" value="2017-01-16">
+            </div>
+            <div>
+                <label class="block text-gray-700">Bill No.:</label>
+                <input type="text" class="w-full border border-gray-300 p-2 rounded" value="B00020">
+            </div>
+            <div>
+                <label class="block text-gray-700">Vendor Name:</label>
+                <div class="flex">
+                    <input type="text" class="w-full border border-gray-300 p-2 rounded" value="mike (mike@gmail.com)">
+                    <button class="ml-2 bg-blue-500 text-white px-4 py-2 rounded">Add Vendor</button>
+                </div>
+            </div>
+            <div>
+                <label class="block text-gray-700">Location Name:</label>
+                <select class="w-full border border-gray-300 p-2 rounded">
+                    <option>Primary Location</option>
+                </select>
+            </div>
+        </div>
+        <button class="bg-blue-500 text-white px-4 py-2 rounded mb-4">Add Product</button>
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white border border-gray-300">
+                <thead>
+                    <tr class="bg-blue-200">
+                        <th class="border border-gray-300 p-2">Product Name</th>
+                        <th class="border border-gray-300 p-2">Qty.</th>
+                        <th class="border border-gray-300 p-2">Price</th>
+                        <th class="border border-gray-300 p-2">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="border border-gray-300 p-2">
+                            <input type="text" class="w-full border border-gray-300 p-2 rounded" value="Greaser Denim Jacket">
+                            <div class="text-sm text-gray-600">Balance Stock Quantity 15</div>
+                        </td>
+                        <td class="border border-gray-300 p-2">
+                            <input type="text" class="w-full border border-gray-300 p-2 rounded" value="10">
+                        </td>
+                        <td class="border border-gray-300 p-2">
+                            <input type="text" class="w-full border border-gray-300 p-2 rounded" value="20">
+                        </td>
+                        <td class="border border-gray-300 p-2">
+                            <input type="text" class="w-full border border-gray-300 p-2 rounded" value="200" readonly>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="flex justify-between items-center bg-yellow-100 p-2 mt-2">
+            <div>Order Subtotal:</div>
+            <div><input type="text" class="border border-gray-300 p-2 rounded" value="200" readonly></div>
+        </div>
+        <button class="bg-blue-500 text-white px-4 py-2 rounded mt-4">Add Other Chg.</button>
+        <div class="mt-4">
+          <table class="min-w-full bg-white border border-gray-300">
+            <thead>
+                <tr class="bg-blue-200">
+                    <th class="border border-gray-300 p-2">Other Charges</th>
+                    <th class="border border-gray-300 p-2">Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="border border-gray-300 p-2">
+                        <select class="w-full border border-gray-300 p-2 rounded">
+                            <option>State Tax</option>
+                        </select>
+                    </td>
+                    <td class="border border-gray-300 p-2">
+                        <input type="text" class="w-full border border-gray-300 p-2 rounded" value="10">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="flex justify-between items-center bg-yellow-100 p-2 mt-2">
+        <div>Other Charges Total:</div>
+        <div><input type="text" class="border border-gray-300 p-2 rounded" value="10" readonly></div>
+    </div>
+    <div class="flex justify-between items-center bg-yellow-100 p-2 mt-2">
+        <div>Purchase Invoice Total:</div>
+        <div><input type="text" class="border border-gray-300 p-2 rounded" value="210" readonly></div>
+    </div>
+    <div class="mt-4">
+        <label class="block text-gray-700">Notes</label>
+        <textarea class="w-full border border-gray-300 p-2 rounded h-24"></textarea>
+    </div>
+    <div class="flex justify-end mt-4">
+        <button class="bg-blue-500 text-white px-4 py-2 rounded mr-2">Save</button>
+        <a href="purchase.html">
+        <button class="bg-gray-400 text-white px-4 py-2 rounded">Cancel</button>
+        </a>
+    </div>
+</div>
+</body>
+</html>
